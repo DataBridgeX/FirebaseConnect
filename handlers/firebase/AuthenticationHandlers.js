@@ -1,93 +1,64 @@
-export const handleSignup = async (req, res) => {
+const handleRequest = async (handler, req, res) => {
   try {
-    const response = await req.authInstance.createUser(req.body.userData);
+    const response = await handler(req);
     res.json({ response });
   } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
+    console.error("Authentication Error:", error);
+    res.status(500).send("Authentication failed");
   }
 };
 
+export const handleSignup = async (req, res) => {
+  await handleRequest(req.authInstance.createUser, req.body.userData, res);
+};
+
 export const handleVerificationEmail = async (req, res) => {
-  try {
-    const response = await req.authInstance.verificationEmail(req.body.email);
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(req.authInstance.verificationEmail, req.body.email, res);
 };
+
 export const handleLoginUser = async (req, res) => {
-  try {
-    const response = await req.authInstance.loginUser(
-      req.body.email,
-      req.body.password
-    );
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(
+    req.authInstance.loginUser,
+    req.body.email,
+    req.body.password,
+    res
+  );
 };
+
 export const handleUpdateUser = async (req, res) => {
-  try {
-    const response = await req.authInstance.updateUser(
-      req.body.uid,
-      req.body.userData
-    );
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(
+    req.authInstance.updateUser,
+    req.body.uid,
+    req.body.userData,
+    res
+  );
 };
+
 export const handleGetUser = async (req, res) => {
-  try {
-    const response = await req.authInstance.getUser(req.body.uid);
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(req.authInstance.getUser, req.body.uid, res);
 };
+
 export const handleDeleteUser = async (req, res) => {
-  try {
-    const response = await req.authInstance.deleteUser(req.body.uid);
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(req.authInstance.deleteUser, req.body.uid, res);
 };
+
 export const handleCreatePhoneVerification = async (req, res) => {
-  try {
-    const response = await req.authInstance.createPhoneVerification(
-      req.body.phoneNumber
-    );
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(
+    req.authInstance.createPhoneVerification,
+    req.body.phoneNumber,
+    res
+  );
 };
+
 export const handleVerityPhoneVerification = async (req, res) => {
-  try {
-    const response = await req.authInstance.verityPhoneVerification(
-      req.body.verificationId,
-      req.body.otp
-    );
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(
+    req.authInstance.verityPhoneVerification,
+    req.body.verificationId,
+    req.body.otp,
+    res
+  );
 };
+
 export const handleResetPassword = async (req, res) => {
-  try {
-    const response = await req.authInstance.resetPassword(req.body.email);
-    res.json({ response });
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).send("Signup failed");
-  }
+  await handleRequest(req.authInstance.resetPassword, req.body.email, res);
 };
