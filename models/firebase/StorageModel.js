@@ -3,7 +3,7 @@ import {
   getDownloadURL,
   deleteObject,
   uploadString,
-} from "../../utils/firebase/config.js";
+} from "firebase/storage";
 
 /**
  * Class representing Firebase Storage operations.
@@ -12,6 +12,7 @@ export class Storage {
   /**
    * Creates a new instance of the Storage class.
    * @param {string} initPath - The initial path for storage operations.
+   * @param {Object} storage - The Firebase storage instance.
    */
   constructor(initPath, storage) {
     this.initPath = initPath;

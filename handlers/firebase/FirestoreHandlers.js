@@ -1,59 +1,33 @@
-export const handleCreateDocument = async (req, res) => {
+const handleRequest = async (handler, req, res) => {
   try {
-    const response = await req.firestoreInstance.create(req.body.data);
+    const response = await handler(req);
     res.json({ response });
   } catch (error) {
-    console.error("Create Document Error:", error);
-    res.status(500).send("Create document failed");
+    console.error(`${handler.name} Error:`, error);
+    res.status(500).send(`${handler.name} failed`);
   }
+};
+
+export const handleCreateDocument = async (req, res) => {
+  await handleRequest(req.firestoreInstance.create, req.body.data, res);
 };
 
 export const handleReadDocument = async (req, res) => {
-  try {
-    const response = await req.firestoreInstance.read();
-    res.json({ response });
-  } catch (error) {
-    console.error("Read Document Error:", error);
-    res.status(500).send("Read document failed");
-  }
+  await handleRequest(req.firestoreInstance.read, req, res);
 };
 
 export const handleUpdateDocument = async (req, res) => {
-  try {
-    const response = await req.firestoreInstance.update(req.body.data);
-    res.json({ response });
-  } catch (error) {
-    console.error("Update Document Error:", error);
-    res.status(500).send("Update document failed");
-  }
+  await handleRequest(req.firestoreInstance.update, req.body.data, res);
 };
 
 export const handleDeleteDocument = async (req, res) => {
-  try {
-    const response = await req.firestoreInstance.delete();
-    res.json({ response });
-  } catch (error) {
-    console.error("Delete Document Error:", error);
-    res.status(500).send("Delete document failed");
-  }
+  await handleRequest(req.firestoreInstance.delete, req, res);
 };
 
 export const handleReadPaths = async (req, res) => {
-  try {
-    const response = await req.firestoreInstance.readPaths();
-    res.json({ response });
-  } catch (error) {
-    console.error("Read Paths Error:", error);
-    res.status(500).send("Read paths failed");
-  }
+  await handleRequest(req.firestoreInstance.readPaths, req, res);
 };
 
 export const handleReadAllDocuments = async (req, res) => {
-  try {
-    const response = await req.firestoreInstance.readAll();
-    res.json({ response });
-  } catch (error) {
-    console.error("Read All Documents Error:", error);
-    res.status(500).send("Read all documents failed");
-  }
+  await handleRequest(req.firestoreInstance.readAll, req, res);
 };

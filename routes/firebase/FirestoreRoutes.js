@@ -9,14 +9,18 @@ import {
 } from "../../handlers/firebase/FirestoreHandlers.js";
 import firestoreInitiateObjects from "../../middlewares/firebase/firestoreInitiateObjects.js";
 
-const firestoreRouter = new Router();
+const firestoreRouter = Router();
+
 firestoreRouter.use(firestoreInitiateObjects);
-firestoreRouter
-  .route("/")
+
+// Document routes
+firestoreRouter.route("/")
   .get(handleReadDocument)
   .post(handleCreateDocument)
   .put(handleUpdateDocument)
   .delete(handleDeleteDocument);
+
+// Additional routes
 firestoreRouter.get("/paths", handleReadPaths);
 firestoreRouter.get("/all", handleReadAllDocuments);
 
