@@ -1,7 +1,7 @@
 # FirebaseConnect API Documentation
 
 Welcome to the comprehensive documentation for FirebaseConnect, a robust API designed to streamline integration with Firebase services. This documentation aims to provide an in-depth understanding of FirebaseConnect's endpoints, methods, and functionalities for seamless interaction with Firebase Authentication, Cloud Firestore, Firebase Realtime Database, and Firebase Cloud Storage.
-
+[Hosted API](https://fir-connect-ea9c9.uc.r.appspot.com)
 ## Authentication
 
 FirebaseConnect simplifies user authentication with Firebase Authentication through a comprehensive set of endpoints and methods.
