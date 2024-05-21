@@ -3,8 +3,7 @@ import {
   getDownloadURL,
   deleteObject,
   uploadString,
-  storage,
-} from "../config/firebase.js";
+} from "../../utils/firebase/config.js";
 
 /**
  * Class representing Firebase Storage operations.
@@ -14,8 +13,9 @@ export class Storage {
    * Creates a new instance of the Storage class.
    * @param {string} initPath - The initial path for storage operations.
    */
-  constructor(initPath) {
+  constructor(initPath, storage) {
     this.initPath = initPath;
+    this.storage = storage;
   }
 
   /**
@@ -26,7 +26,7 @@ export class Storage {
    */
   async uploadByte8Array(path, imageBase64) {
     try {
-      const storageRef = ref(storage, this.initPath + path);
+      const storageRef = ref(this.storage, this.initPath + path);
       await uploadString(storageRef, imageBase64, "base64");
       const downloadURL = await this.getDownloadURL(path);
       return [true, downloadURL];
@@ -44,7 +44,7 @@ export class Storage {
    */
   async uploadFile(file, path) {
     try {
-      const storageRef = ref(storage, this.initPath + path);
+      const storageRef = ref(this.storage, this.initPath + path);
       const snapshot = await storageRef.put(file);
       const downloadURL = await snapshot.ref.getDownloadURL();
       return [true, downloadURL];
@@ -61,7 +61,7 @@ export class Storage {
    */
   async getDownloadURL(path) {
     try {
-      const storageRef = ref(storage, this.initPath + path);
+      const storageRef = ref(this.storage, this.initPath + path);
       const downloadURL = await getDownloadURL(storageRef);
       return [true, downloadURL];
     } catch (error) {
@@ -77,7 +77,7 @@ export class Storage {
    */
   async deleteFile(path) {
     try {
-      const storageRef = ref(storage, this.initPath + path);
+      const storageRef = ref(this.storage, this.initPath + path);
       await deleteObject(storageRef);
       return [true, NaN];
     } catch (error) {
