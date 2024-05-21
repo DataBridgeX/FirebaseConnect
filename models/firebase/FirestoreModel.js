@@ -1,5 +1,5 @@
-import { admin } from "../config/firebase.js";
-import getDocumentIdByContent from "../utils/firebase/getDocumentIdByContent.js";
+import { admin } from "../../utils/firebase/config.js";
+import getDocumentIdByContent from "../../utils/firebase/getDocumentIdByContent.js";
 
 /**
  * Firestore class for performing CRUD operations on Firestore collections.
@@ -11,10 +11,10 @@ export default class Firestore {
    * @param {string} uid - The unique identifier for the document.
    * @param {Array} nestedPaths - Array of nested paths for document reference.
    */
-  constructor(collectionName, uid, nestedPaths = []) {
+  constructor(collectionName, uniqueID, nestedPaths = []) {
     this.collectionName = collectionName;
     this.collection = admin.firestore().collection(collectionName);
-    this.uid = uid;
+    this.uniqueID = uniqueID;
     this.nestedPaths = nestedPaths;
   }
 
@@ -34,7 +34,9 @@ export default class Firestore {
         collectionRef = collectionRef.doc(this.nestedPaths[i]);
       }
     }
-    const docRef = this.uid ? collectionRef.doc(this.uid) : collectionRef.doc();
+    const docRef = this.uniqueID
+      ? collectionRef.doc(this.uniqueID)
+      : collectionRef.doc();
     await docRef.set(data);
     const docID = await getDocumentIdByContent(collectionRef, data);
     return [true, docID];
@@ -56,7 +58,7 @@ export default class Firestore {
           collectionRef = collectionRef.doc(this.nestedPaths[i]);
         }
       }
-      const docSnapshot = await collectionRef.doc(this.uid).get();
+      const docSnapshot = await collectionRef.doc(this.uniqueID).get();
       if (!docSnapshot.exists) {
         return [false, "Document does not exist"];
       }
@@ -82,7 +84,7 @@ export default class Firestore {
         collectionRef = collectionRef.doc(this.nestedPaths[i]);
       }
     }
-    await collectionRef.doc(this.uid).update(data);
+    await collectionRef.doc(this.uniqueID).update(data);
     return [true, NaN];
   }
 
@@ -102,7 +104,7 @@ export default class Firestore {
           collectionRef = collectionRef.doc(this.nestedPaths[i]);
         }
       }
-      await collectionRef.doc(this.uid).delete();
+      await collectionRef.doc(this.uniqueID).delete();
       return [true, NaN];
     } catch (error) {
       return [false, error.message];

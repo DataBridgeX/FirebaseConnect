@@ -1,10 +1,11 @@
-import { auth, firebase } from "../config/firebase.js";
-import Firestore from "./firestore.js";
-
+import { firebase } from "../../utils/firebase/config.js";
 export class Authentication {
+  constructor(auth) {
+    this.auth = auth;
+  }
   async createUser(userData) {
     try {
-      const userRecord = await auth.createUser(userData);
+      const userRecord = await this.auth.createUser(userData);
       return [true, userRecord.uid];
       // return userRecord.uid;
     } catch (error) {
@@ -13,7 +14,7 @@ export class Authentication {
   }
 
   verificationEmail(email) {
-    return auth.generateEmailVerificationLink(email);
+    return this.auth.generateEmailVerificationLink(email);
   }
 
   async loginUser(email, password) {
@@ -29,7 +30,7 @@ export class Authentication {
 
   async updateUser(uid, updateUserData) {
     try {
-      const userRecord = await auth.updateUser(uid, updateUserData);
+      const userRecord = await this.auth.updateUser(uid, updateUserData);
       return [true, userRecord.toJSON()];
     } catch (error) {
       return [false, error.message];
@@ -38,7 +39,7 @@ export class Authentication {
 
   async getUser(uid) {
     try {
-      const user = await auth.getUser(uid);
+      const user = await this.auth.getUser(uid);
       return [true, user];
     } catch (error) {
       return [false, error.message];
@@ -47,7 +48,7 @@ export class Authentication {
 
   async deleteUser(uid) {
     try {
-      await auth.deleteUser(uid);
+      await this.auth.deleteUser(uid);
       return [true, uid];
     } catch (error) {
       return [false, error.message];
@@ -55,42 +56,22 @@ export class Authentication {
   }
 
   async createPhoneVerification(phoneNumber) {
-    const request = await auth.createSessionCookie(phoneNumber, {
+    const request = await this.auth.createSessionCookie(phoneNumber, {
       expiresIn: 3600,
     });
     return request;
   }
 
   async verityPhoneVerification(verificationId, otp) {
-    const userCreds = await auth.verifySessionCookie(verificationId, otp);
+    const userCreds = await this.auth.verifySessionCookie(verificationId, otp);
     return userCreds;
   }
 
   async resetPassword(email) {
-    const request = await auth.sendPasswordResetEmail(email);
+    const request = await this.auth.sendPasswordResetEmail(email);
     return request;
   }
 
-  async getUsers() {
-    const listUsersResult = await auth.listUsers();
-    const users = await Promise.all(
-      listUsersResult.users.map(async (userRecord) => {
-        // Additional async operation to read user data from Firestore
-        let userData;
-        try {
-          const fs = await Firestore("users", userRecord.uid);
-          userData = fs.read();
-        } catch {
-          userData = { false: "No user data found" };
-        }
-        return {
-          ...userRecord, // Include default user data
-          ...userData, // Include additional user data from Firestore
-        };
-      })
-    );
-    return users;
-  }
   emailVerification(url) {
     return `
     <!DOCTYPE html>

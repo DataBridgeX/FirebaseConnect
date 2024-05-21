@@ -16,9 +16,9 @@ export default class RealTime {
    * Creates a new instance of the RealTime class.
    * @param {string} r - The path to the database reference.
    */
-  constructor(r) {
+  constructor(path) {
     this.database = getDatabase();
-    this.itemsRef = ref(this.database, r);
+    this.itemsRef = ref(this.database, path);
   }
 
   /**
