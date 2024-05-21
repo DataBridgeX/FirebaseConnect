@@ -1,4 +1,4 @@
-import { admin } from "../config/firebase.js";
+import { admin } from "../../utils/firebase/config.js";
 import getDocumentIdByContent from "../../utils/firebase/getDocumentIdByContent.js";
 
 export default class Firestore {
